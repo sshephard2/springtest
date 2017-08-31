@@ -151,4 +151,30 @@ public class CustomerController {
 		}
 		return ResponseEntity.badRequest().build();
 	}
+	
+	/**
+	 * Route to update a customer: PUT /customers
+	 * @param customer
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.PUT, value = "/customers/{customerId}")
+	public ResponseEntity<Customer> updateCustomer(@Valid @PathVariable Long customerId, @RequestBody Customer customer) {
+		
+		logger.info("/customers {} PUT {}", customerId, customer.toString());
+			
+		Customer updateCustomer = repository.findOne(customerId);
+		updateCustomer.setFirst_name(customer.getFirst_name());
+		updateCustomer.setLast_name(customer.getLast_name());
+		updateCustomer.setEmail(customer.getEmail());
+		updateCustomer.setUsername(customer.getUsername());
+		try {
+			// Attempt to save the customer to the repository, may throw validation errors from the DB
+			// e.g. uniqueness constraints on username, email
+			updateCustomer = repository.save(updateCustomer);
+			return ResponseEntity.ok().body(updateCustomer);
+		} catch (Exception e) {
+			logger.error("Repository save exception {}", e.getMessage());
+		}
+		return ResponseEntity.badRequest().build();
+	}
 }
