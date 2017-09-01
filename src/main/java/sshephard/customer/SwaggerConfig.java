@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Configuration;
 
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -18,6 +20,19 @@ public class SwaggerConfig {
 				.select()
 				.apis(RequestHandlerSelectors.basePackage("sshephard.customer"))
 				.paths(PathSelectors.any())
-				.build();
+				.build()
+				.apiInfo(info());
+	}
+	
+	private ApiInfo info() {
+		ApiInfo apiInfo = new ApiInfo(
+				"Spring Boot REST API demo",
+				"Demonstration RESTful API and Swagger documentation",
+				"1.0",
+				"",
+				new Contact("Stephen Shephard", "", "stephen.j.shephard@icloud.com"),
+				"",
+				"");
+		return apiInfo;
 	}
 }

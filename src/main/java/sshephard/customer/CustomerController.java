@@ -23,12 +23,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 /**
  * Spring Boot REST controller
  * @author s.shephard2
  *
  */
 @RestController
+@Api(value="customers")
 public class CustomerController {
 	
 	// Logger for customer.CustomerController
@@ -41,7 +45,9 @@ public class CustomerController {
 	 * Health check route: GET / returns success
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/")
+	@ApiOperation(value = "Health check",
+		    notes = "Returns OK status")
+	@RequestMapping(method = RequestMethod.GET, value = "/", produces = "application/json")
 	public ResponseEntity<?> healthCheck() {
 		logger.info("/ GET");
 		return ResponseEntity.ok().build();
@@ -52,7 +58,11 @@ public class CustomerController {
 	 * @param requestParams
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/customers")
+	@ApiOperation(value = "Search for customers",
+		    notes = "Search by any combination of name, username, email and born_after",
+		    response = Customer.class,
+		    responseContainer = "List")
+	@RequestMapping(method = RequestMethod.GET, value = "/customers", produces = "application/json")
 	public ResponseEntity<CustomerSearch> search(@RequestParam Map<String,String> requestParams) {
 		logger.info("/customers GET");
 		
@@ -118,7 +128,9 @@ public class CustomerController {
 	 * @param customerId
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/customers/{customerId}")
+	@ApiOperation(value = "Retrieve specific customer",
+		    notes = "Retrieve specific customer by customerid")
+	@RequestMapping(method = RequestMethod.GET, value = "/customers/{customerId}", produces = "application/json")
 	public ResponseEntity<Customer> customer(@PathVariable Long customerId) {
 	
 		logger.info("/customers/{} GET", customerId);
@@ -135,7 +147,9 @@ public class CustomerController {
 	 * @param customer
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/customers")
+	@ApiOperation(value = "Create customer",
+		    notes = "Create a new customer")
+	@RequestMapping(method = RequestMethod.POST, value = "/customers", produces = "application/json")
 	public ResponseEntity<Customer> createCustomer(@Valid @RequestBody Customer customer) {
 		
 		logger.info("/customers {} POST", customer.toString());
@@ -157,7 +171,9 @@ public class CustomerController {
 	 * @param customer
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.PUT, value = "/customers/{customerId}")
+	@ApiOperation(value = "Update existing customer",
+		    notes = "Update the values of an existing customer")
+	@RequestMapping(method = RequestMethod.PUT, value = "/customers/{customerId}", produces = "application/json")
 	public ResponseEntity<Customer> updateCustomer(@Valid @PathVariable Long customerId, @RequestBody Customer customer) {
 		
 		logger.info("/customers {} PUT {}", customerId, customer.toString());

@@ -19,6 +19,8 @@ import org.hibernate.validator.constraints.Email;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Customer entity
  * @author s.shephard2
@@ -31,51 +33,59 @@ public class Customer {
 
 	// An id that uniquely identifies the customer. This will be provided by the server when the customer is created and may not be changed.
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)    
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@ApiModelProperty(notes = "Database generated customer id")
 	private Long id;
 	
 	// Username
 	@Size(min = 0, max = 100)
 	@Column(unique=true)
+	@ApiModelProperty(notes = "Unique username")
 	private String username;
 	
 	// Email - should contain a superficially valid email
 	@Size(min = 0, max = 100)
 	@Column(unique=true)
 	@Email(message = "The email address must be in the format of name@domain.com")
+	@ApiModelProperty(notes = "Unique and valid email address")
 	private String email;
 	
 	// First name
     @Size(min = 0, max = 25)
     @Pattern(regexp = "[A-Za-z-' ]+", message = "Please use a name without numbers or special characters")
+    @ApiModelProperty(notes = "Customer first name")
 	private String first_name;
 	
 	// Last name - required to be non-blank
 	@NotNull
     @Size(min = 1, max = 25)
     @Pattern(regexp = "[A-Za-z-' ]+", message = "Please use a name without numbers or special characters")
+	@ApiModelProperty(notes = "Customer last name", required = true)
 	private String last_name;
 	
 	// A display_name, which if not defined at creation should be the first name and last names joined with a space.
 	@Size(min = 0, max = 60)
 	@Pattern(regexp = "[A-Za-z-' ]+", message = "Please use a name without numbers or special characters")
+	@ApiModelProperty(notes = "A display name, which if not defined wil be the first and last names joined with space")
 	private String display_name;
 	
 	/* 
 	 * The created_at datetime when the customer was added to the system, assigned by the system when the customer is created.
 	 * Formatted 'YYYY-MM-DD HH:mm:ss' e.g. '2016-11-08 22:18:03' for 'November 8, 2016 at 10:18:03 PM'.
 	 */
-	@Past
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	@Temporal(TemporalType.TIMESTAMP)
+	@ApiModelProperty(notes = "Automatically generated created date")
 	private Date created_at;
 	
 	/* 
 	 * The date of birth of the customer
 	 * It should be formatted 'YYYY-MM-DD' -- for example, '2016-11-08' for 'November 8, 2016'.
 	 */
+	@Past
 	@JsonFormat(pattern="yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
+	@ApiModelProperty(notes = "Customer date of birth formatted YYYY-MM-DD")
 	private Date birthdate;
 	
 	/**
